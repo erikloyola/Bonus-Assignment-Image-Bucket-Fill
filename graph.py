@@ -432,31 +432,29 @@ def create_graph(data):
     """
     lines = data.strip().splitlines()
 
-    # Parse image size and number of vertices
     image_size = int(lines[0])
     num_vertices = int(lines[1])
 
-    # Create graph
     img_graph = ImageGraph(image_size)
 
-    # Add vertices
     for i in range(2, 2 + num_vertices):
         x, y, color = lines[i].split(",")
         img_graph.vertices.append(ColoredVertex(i - 2, int(x), int(y), color))
 
-    # Add edges
     idx = 2 + num_vertices
-    while lines[idx] != "":  # Blank line separates edges from start/color
-        from_idx, to_idx = map(int, lines[idx].split(","))
-        img_graph.vertices[from_idx].add_edge(to_idx)
-        img_graph.vertices[to_idx].add_edge(from_idx)
-        idx += 1
+    while idx < len(lines):
+        line = lines[idx].strip()
+        if "," in line:
+            from_idx, to_idx = map(int, line.split(","))
+            img_graph.vertices[from_idx].add_edge(to_idx)
+            img_graph.vertices[to_idx].add_edge(from_idx)
+            idx += 1
+        else:
+            break
 
-    # Read starting vertex and color
-    start_index = int(lines[idx + 1])
-    new_color = lines[idx + 2]
+    start_index = int(lines[idx])
+    new_color = lines[idx + 1]
 
-    # Return
     return img_graph, start_index, new_color
 
 
