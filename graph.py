@@ -445,16 +445,19 @@ def create_graph(data):
         img_graph.vertices.append(vertex)
         position_map[(vertex.x, vertex.y)] = vertex.index
 
-    # Connect neighbors
+    # Connect neighbors only if colors match
     for vertex in img_graph.vertices:
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             neighbor_coords = (vertex.x + dx, vertex.y + dy)
             if neighbor_coords in position_map:
-                vertex.add_edge(position_map[neighbor_coords])
+                neighbor_index = position_map[neighbor_coords]
+                neighbor_vertex = img_graph.vertices[neighbor_index]
+                if vertex.color == neighbor_vertex.color:
+                    vertex.add_edge(neighbor_index)
 
-    # Correctly grab start and color
+    # Grab start vertex and new color
     start_index = int(lines[2 + num_vertices])
-    new_color = lines[3 + num_vertices]
+    new_color = lines[3 + num_vertices].strip()
 
     return img_graph, start_index, new_color
 
