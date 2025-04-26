@@ -432,34 +432,23 @@ def create_graph(data):
     """
     lines = data.strip().splitlines()
 
-    image_size = int(lines[0])
-    num_vertices = int(lines[1])
-
-    img_graph = ImageGraph(image_size)
+    img_graph = ImageGraph(int(lines[0]))
     position_map = {}
 
-    for i in range(2, 2 + num_vertices):
-        x, y, color = lines[i].split(",")
-        x = int(x)
-        y = int(y)
-        index = i - 2
-        vertex = ColoredVertex(index, x, y, color)
+    for i in range(2, 2 + int(lines[1])):
+        parts = lines[i].split(",")
+        vertex = ColoredVertex(i - 2, int(parts[0]), int(parts[1]), parts[2].strip())
         img_graph.vertices.append(vertex)
-        position_map[(x, y)] = index
+        position_map[(vertex.x, vertex.y)] = vertex.index
 
     for vertex in img_graph.vertices:
-        x, y = vertex.x, vertex.y
-        neighbors = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
-        for nx, ny in neighbors:
-            if (nx, ny) in position_map:
-                neighbor_idx = position_map[(nx, ny)]
-                vertex.add_edge(neighbor_idx)
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            neighbor_coords = (vertex.x + dx, vertex.y + dy)
+            if neighbor_coords in position_map:
+                vertex.add_edge(position_map[neighbor_coords])
 
-    start_coords = lines[2 + num_vertices].split()
-    start_x = int(start_coords[0])
-    start_y = int(start_coords[1])
-    start_index = position_map[(start_x, start_y)]
-    new_color = lines[2 + num_vertices + 1]
+    start_index = int(lines[2 + int(lines[1])])
+    new_color = lines[3 + int(lines[1])]
 
     return img_graph, start_index, new_color
 
