@@ -457,7 +457,8 @@ def create_graph(data):
             if (nx, ny) in position_map:
                 neighbor_idx = position_map[(nx, ny)]
                 neighbor = img_graph.vertices[neighbor_idx]
-                if neighbor.color == color:
+
+                if neighbor.color == vertex.color:
                     vertex.add_edge(neighbor_idx)
 
     start_index = int(lines[2 + num_vertices])
