@@ -437,23 +437,29 @@ def create_graph(data):
 
     img_graph = ImageGraph(image_size)
 
+    position_map = {}  # maps (x, y) -> index
+
     for i in range(2, 2 + num_vertices):
         x, y, color = lines[i].split(",")
-        img_graph.vertices.append(ColoredVertex(i - 2, int(x), int(y), color))
+        x = int(x)
+        y = int(y)
+        index = i - 2
+        vertex = ColoredVertex(index, x, y, color)
+        img_graph.vertices.append(vertex)
+        position_map[(x, y)] = index
 
-    idx = 2 + num_vertices
-    while idx < len(lines):
-        line = lines[idx].strip()
-        if "," in line:
-            from_idx, to_idx = map(int, line.split(","))
-            img_graph.vertices[from_idx].add_edge(to_idx)
-            img_graph.vertices[to_idx].add_edge(from_idx)
-            idx += 1
-        else:
-            break
+    for vertex in img_graph.vertices:
+        x, y, color = vertex.x, vertex.y, vertex.color
+        neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+        for nx, ny in neighbors:
+            if (nx, ny) in position_map:
+                neighbor_idx = position_map[(nx, ny)]
+                neighbor = img_graph.vertices[neighbor_idx]
+                if neighbor.color == color:
+                    vertex.add_edge(neighbor_idx)
 
-    start_index = int(lines[idx])
-    new_color = lines[idx + 1]
+    start_index = int(lines[2 + num_vertices])
+    new_color = lines[2 + num_vertices + 1]
 
     return img_graph, start_index, new_color
 
