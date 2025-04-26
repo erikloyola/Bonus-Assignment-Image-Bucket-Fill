@@ -455,8 +455,13 @@ def create_graph(data):
                 if vertex.color == neighbor_vertex.color:
                     vertex.add_edge(neighbor_index)
 
-    # Grab start vertex and new color
-    start_index = int(lines[2 + num_vertices])
+    # Correctly grab x and y position for start
+    start_coords = lines[2 + num_vertices].strip().split(",")
+    start_x = int(start_coords[0])
+    start_y = int(start_coords[1])
+    start_index = position_map[(start_x, start_y)]
+
+    # Grab new color
     new_color = lines[3 + num_vertices].strip()
 
     return img_graph, start_index, new_color
