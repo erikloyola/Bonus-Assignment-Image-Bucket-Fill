@@ -450,8 +450,7 @@ def create_graph(data):
     for vertex in img_graph.vertices:
         x, y, color = vertex.x, vertex.y, vertex.color
         neighbors = [
-            (x+1, y), (x-1, y), (x, y+1), (x, y-1),
-            (x+1, y+1), (x+1, y-1), (x-1, y+1), (x-1, y-1)
+            (x+1, y), (x-1, y), (x, y+1), (x, y-1)
         ]
         for nx, ny in neighbors:
             if (nx, ny) in position_map:
