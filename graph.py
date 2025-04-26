@@ -432,23 +432,29 @@ def create_graph(data):
     """
     lines = data.strip().splitlines()
 
-    img_graph = ImageGraph(int(lines[0]))
+    image_size = int(lines[0])
+    num_vertices = int(lines[1])
+
+    img_graph = ImageGraph(image_size)
     position_map = {}
 
-    for i in range(2, 2 + int(lines[1])):
+    # Create vertices
+    for i in range(2, 2 + num_vertices):
         parts = lines[i].split(",")
         vertex = ColoredVertex(i - 2, int(parts[0]), int(parts[1]), parts[2].strip())
         img_graph.vertices.append(vertex)
         position_map[(vertex.x, vertex.y)] = vertex.index
 
+    # Connect neighbors
     for vertex in img_graph.vertices:
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             neighbor_coords = (vertex.x + dx, vertex.y + dy)
             if neighbor_coords in position_map:
                 vertex.add_edge(position_map[neighbor_coords])
 
-    start_index = int(lines[2 + int(lines[1])])
-    new_color = lines[3 + int(lines[1])]
+    # Correctly grab start and color
+    start_index = int(lines[2 + num_vertices])
+    new_color = lines[3 + num_vertices]
 
     return img_graph, start_index, new_color
 
