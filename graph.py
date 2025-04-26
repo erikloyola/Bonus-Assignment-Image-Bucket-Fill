@@ -430,29 +430,34 @@ def create_graph(data):
     post: a tuple containing the ImageGraph instance, the starting position,
           and the search color.
     """
-    lines = data.strip().split("\n")
+    lines = data.strip().splitlines()
+
+    # Parse image size and number of vertices
     image_size = int(lines[0])
     num_vertices = int(lines[1])
-    graph = ImageGraph(image_size)
 
-    idx = 2
-    for _ in range(num_vertices):
-        x, y, color = lines[idx].split(",")
-        vertex = ColoredVertex(_, int(x), int(y), color.strip())
-        graph.vertices.append(vertex)
-        idx += 1
+    # Create graph
+    img_graph = ImageGraph(image_size)
 
-    for _ in range(num_vertices - 1):
+    # Add vertices
+    for i in range(2, 2 + num_vertices):
+        x, y, color = lines[i].split(",")
+        img_graph.vertices.append(ColoredVertex(i - 2, int(x), int(y), color))
+
+    # Add edges
+    idx = 2 + num_vertices
+    while lines[idx] != "":  # Blank line separates edges from start/color
         from_idx, to_idx = map(int, lines[idx].split(","))
-        graph.vertices[from_idx].add_edge(to_idx)
-        graph.vertices[to_idx].add_edge(from_idx)
+        img_graph.vertices[from_idx].add_edge(to_idx)
+        img_graph.vertices[to_idx].add_edge(from_idx)
         idx += 1
 
-    start_index = int(lines[idx])
-    idx += 1
-    color = lines[idx].strip()
+    # Read starting vertex and color
+    start_index = int(lines[idx + 1])
+    new_color = lines[idx + 2]
 
-    return graph, start_index, color
+    # Return
+    return img_graph, start_index, new_color
 
 
 def main():
