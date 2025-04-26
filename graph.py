@@ -448,17 +448,12 @@ def create_graph(data):
         position_map[(x, y)] = index
 
     for vertex in img_graph.vertices:
-        x, y, color = vertex.x, vertex.y, vertex.color
-        neighbors = [
-            (x+1, y), (x-1, y), (x, y+1), (x, y-1)
-        ]
+        x, y = vertex.x, vertex.y
+        neighbors = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
         for nx, ny in neighbors:
             if (nx, ny) in position_map:
                 neighbor_idx = position_map[(nx, ny)]
-                neighbor = img_graph.vertices[neighbor_idx]
-
-                if neighbor.color == vertex.color:
-                    vertex.add_edge(neighbor_idx)
+                vertex.add_edge(neighbor_idx)
 
     start_index = int(lines[2 + num_vertices])
     new_color = lines[2 + num_vertices + 1]
