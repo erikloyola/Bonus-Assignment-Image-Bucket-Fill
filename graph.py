@@ -436,8 +436,7 @@ def create_graph(data):
     num_vertices = int(lines[1])
 
     img_graph = ImageGraph(image_size)
-
-    position_map = {}  # maps (x, y) -> index
+    position_map = {}
 
     for i in range(2, 2 + num_vertices):
         x, y, color = lines[i].split(",")
@@ -450,7 +449,10 @@ def create_graph(data):
 
     for vertex in img_graph.vertices:
         x, y, color = vertex.x, vertex.y, vertex.color
-        neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+        neighbors = [
+            (x+1, y), (x-1, y), (x, y+1), (x, y-1),
+            (x+1, y+1), (x+1, y-1), (x-1, y+1), (x-1, y-1)
+        ]
         for nx, ny in neighbors:
             if (nx, ny) in position_map:
                 neighbor_idx = position_map[(nx, ny)]
