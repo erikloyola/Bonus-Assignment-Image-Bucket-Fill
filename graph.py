@@ -455,7 +455,10 @@ def create_graph(data):
                 neighbor_idx = position_map[(nx, ny)]
                 vertex.add_edge(neighbor_idx)
 
-    start_index = int(lines[2 + num_vertices])
+    start_coords = lines[2 + num_vertices].split()
+    start_x = int(start_coords[0])
+    start_y = int(start_coords[1])
+    start_index = position_map[(start_x, start_y)]
     new_color = lines[2 + num_vertices + 1]
 
     return img_graph, start_index, new_color
